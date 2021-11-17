@@ -6,7 +6,10 @@ class Settings:
     def __init__(self):
 
         # Screen settings
-        self.screen_width, self.screen_height = 1200, 675
+        self.screen_width, self.screen_height = 1360, 765
+
+        self.card_width = self.screen_width / 8
+        self.card_height = self.screen_height / 4
 
         # Color settings
         self.color_palette = {
