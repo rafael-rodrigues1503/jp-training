@@ -16,10 +16,11 @@ class JpTraining:
         self.screen = pg.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pg.display.set_caption("JP Training")
 
-        self.flashcards = pg.sprite.Group()
+        self.flashcards = []
         self.active_flashcard = None
-
         self.create_cards()
+
+        self.run_game()
 
     def run_game(self):
         while True:
@@ -27,8 +28,6 @@ class JpTraining:
             self.update_screen()
 
     def check_events(self):
-        # TODO: Make Tab/Shift+Tab move to next/previous card, respectively
-
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 sys.exit()
@@ -53,10 +52,23 @@ class JpTraining:
                         self.active_flashcard.check_valid()
                         self.active_flashcard.text_input_active = False
                         self.active_flashcard = None
+                    elif event.key == pygame.K_TAB:
+                        self.active_flashcard.check_valid()
+
+                        index = self.flashcards.index(self.active_flashcard)
+                        self.active_flashcard.text_input_active = False
+
+                        if pg.key.get_pressed()[pg.K_LSHIFT]:
+                            self.active_flashcard = self.flashcards[index - 1]
+                        else:
+                            self.active_flashcard = self.flashcards[index + 1]
+
+                        self.active_flashcard.text_input_active = True
+
                     elif event.key == pygame.K_BACKSPACE:
-                        self.active_flashcard.write_input('')
+                        self.active_flashcard.write_input(backspace=True)
                     else:
-                        self.active_flashcard.write_input(event.unicode)
+                        self.active_flashcard.write_input(char=event.unicode)
 
             elif event.type == pg.MOUSEBUTTONDOWN:
                 mouse_pos = pg.mouse.get_pos()
@@ -74,13 +86,16 @@ class JpTraining:
         pg.display.flip()
 
     def create_cards(self):
-        available_space_x = self.settings.screen_width * 0.95
-        num_cards_x = int(available_space_x // (self.settings.card_width + 20))
 
+        # Leave a 5% margin
+        available_space_x = self.settings.screen_width * 0.95
         available_space_y = self.settings.screen_height * 0.95
+
+        num_cards_x = int(available_space_x // (self.settings.card_width + 20))
         num_cards_y = int(available_space_y // (self.settings.card_height + 20))
 
         hira = random.sample(hiragana, num_cards_x * num_cards_y)
+        card_index = 0
         for row in range(num_cards_y):
             for col in range(num_cards_x):
                 card_x = 50 + (self.settings.card_width + 50) * col
@@ -88,9 +103,15 @@ class JpTraining:
 
                 chosen_hira = hira.pop()
                 card = Flashcard(self.screen, self.settings, chosen_hira, card_x, card_y)
-                self.flashcards.add(card)
+                self.flashcards.append(card)
+
+                card_index += 1
 
 
 if __name__ == '__main__':
     jpt = JpTraining()
-    jpt.run_game()
+
+# TODO: Centralize rows properly.
+# TODO: Make player able to choose which kana will appear.
+# TODO: Implement katakana.
+# TODO: Add scrolling up/down.

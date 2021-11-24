@@ -1,9 +1,8 @@
 import pygame as pg
-from pygame.sprite import Sprite
 from jp_converter import romaji, hiragana
 
 
-class Flashcard(Sprite):
+class Flashcard:
 
     def __init__(self, screen, settings, kana, x, y):
         super().__init__()
@@ -40,22 +39,21 @@ class Flashcard(Sprite):
         self.input_text_rect = self.input_text_render.get_rect()
         self.input_text_rect.center = self.input_rect.center
 
-    def write_input(self, char):
+    def write_input(self, char='', backspace=False):
         if char:
             self.input_text += char
-        else:
+        elif backspace:
             self.input_text = self.input_text[:-1]
         self.input_text_render = self.settings.fonts['input'].render(self.input_text, True, self.settings.color_palette['card_text'])
         self.input_text_rect = self.input_text_render.get_rect()
         self.input_text_rect.center = self.input_rect.center
 
     def check_valid(self):
-        if not self.input_text:
-            pass
-        elif self.input_text == self.answer:
-            self.flashcard_state = 'correct'
-        else:
-            self.flashcard_state = 'wrong'
+        if self.input_text:
+            if self.input_text == self.answer:
+                self.flashcard_state = 'correct'
+            else:
+                self.flashcard_state = 'wrong'
 
     def draw_flashcard(self):
         self.screen.fill(self.settings.color_palette['flashcard_' + self.flashcard_state], self.card_rect)
