@@ -5,8 +5,6 @@ from jp_converter import romaji, hiragana
 class Flashcard:
 
     def __init__(self, screen, settings, kana, x, y):
-        super().__init__()
-
         self.screen = screen
         self.settings = settings
         self.kana = kana
@@ -16,7 +14,7 @@ class Flashcard:
         self.flashcard_state = 'normal'
 
         # Card
-        self.card_rect = pg.Rect(0, 0, self.settings.card_width, self.settings.card_height)
+        self.card_rect = pg.Rect(0, 0, self.settings.card_res[0], self.settings.card_res[1])
         self.card_rect.x = x
         self.card_rect.y = y
 
@@ -27,7 +25,8 @@ class Flashcard:
         self.kana_rect.centery = self.card_rect.y + (self.card_rect.height / 3)
 
         # Input box
-        self.input_box_width, self.input_box_height = self.settings.card_width - 10, (self.settings.card_height / 3) - 10
+        self.input_box_width = self.settings.card_res[0] - 10
+        self.input_box_height = (self.settings.card_res[1] / 3) - 10
         self.input_rect = pg.Rect(0, 0, self.input_box_width, self.input_box_height)
         self.input_rect.centerx = self.card_rect.centerx
         self.input_rect.centery = self.card_rect.y + (self.card_rect.height * 5 / 6)
@@ -35,16 +34,22 @@ class Flashcard:
         # Input text
         self.input_text_active = False
         self.input_text = ''
-        self.input_text_render = self.settings.fonts['input'].render(self.input_text, True, self.settings.color_palette['card_text'])
+        self.input_text_render = self.settings.fonts['input'].render(self.input_text,
+                                                                     True,
+                                                                     self.settings.color_palette['card_text'])
         self.input_text_rect = self.input_text_render.get_rect()
         self.input_text_rect.center = self.input_rect.center
 
     def write_input(self, char='', backspace=False):
-        if char:
-            self.input_text += char
-        elif backspace:
+        if backspace:
             self.input_text = self.input_text[:-1]
-        self.input_text_render = self.settings.fonts['input'].render(self.input_text, True, self.settings.color_palette['card_text'])
+        elif len(self.input_text) == 3 or self.flashcard_state == 'correct':
+            return
+        elif char:
+            self.input_text += char
+        self.input_text_render = self.settings.fonts['input'].render(self.input_text,
+                                                                     True,
+                                                                     self.settings.color_palette['card_text'])
         self.input_text_rect = self.input_text_render.get_rect()
         self.input_text_rect.center = self.input_rect.center
 
