@@ -9,7 +9,7 @@ A Pygame project for the purpose of training hiragana/katakana.　This project i
   
 <h3>Upcoming Features</h3>
   <ul>
-  <li>Choose a set of kana to train</li>
+  <li>Choose a set of kana to practice</li>
   <li>Add Katakana support</li>
   <li>Allow player to scroll up/down, therefore allowing more kana to be used</li>
   </ul>
