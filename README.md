@@ -1,6 +1,5 @@
 # JP Training (WIP)
-A Pygame project for the purpose of training hiragana/katakana.
-This project is based on <a href='https://kana-quiz.tofugu.com/'>Tofugu's Kana Quiz</a>.
+A Pygame project for the purpose of training hiragana/katakana.　This project is based on <a href='https://kana-quiz.tofugu.com/'>Tofugu's Kana Quiz</a>.
 
 <h3>Current Features</h3>
   <ul>
